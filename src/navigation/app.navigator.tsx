@@ -2,6 +2,7 @@ import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {NavigationRoutes} from './navigation.routes';
 import {View} from 'react-native';
+import {WalletManagementScreen} from '@easyether/feature/wallet_management/wallet-management.screen';
 
 const Stack = createNativeStackNavigator();
 
@@ -10,7 +11,7 @@ const AppNavigator: React.VFC = () => {
     <Stack.Navigator>
       <Stack.Screen
         name={NavigationRoutes.READ_WALLET_SCREEN}
-        component={View}
+        component={WalletManagementScreen}
       />
       <Stack.Screen
         name={NavigationRoutes.WALLET_MANAGEMENT_SCREEN}

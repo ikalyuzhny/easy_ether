@@ -12,6 +12,7 @@
   "dependencies": {
     "@react-navigation/native": "^6.0.10",
     "@react-navigation/native-stack": "^6.6.1",
+    "@remobile/react-native-clip-rect": "^1.0.0",
     "@tradle/react-native-http": "^2.0.1",
     "assert": "^1.5.0",
     "browserify-zlib": "^0.1.4",
@@ -31,6 +32,8 @@
     "react": "17.0.2",
     "react-i18next": "^11.16.2",
     "react-native": "0.68.0",
+    "react-native-camera": "^4.2.1",
+    "react-native-config": "^1.4.5",
     "react-native-crypto": "^2.2.0",
     "react-native-level-fs": "^3.0.1",
     "react-native-os": "^1.2.6",
@@ -48,7 +51,8 @@
     "tty-browserify": "0.0.0",
     "url": "^0.10.3",
     "util": "^0.10.4",
-    "vm-browserify": "0.0.4"
+    "vm-browserify": "0.0.4",
+    "web3": "^1.7.1"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",

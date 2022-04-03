@@ -32,7 +32,7 @@ const AppTheme: IAppTheme = {
       card: DarkAppPalette.CARD,
       text: DarkAppPalette.TEXT,
       border: DarkAppPalette.BORDER,
-      notification: DarkAppPalette.SECONDARY
+      notification: DarkAppPalette.SECONDARY,
     },
   },
   light: {
@@ -43,7 +43,7 @@ const AppTheme: IAppTheme = {
       card: LightAppPalette.CARD,
       text: LightAppPalette.TEXT,
       border: LightAppPalette.BORDER,
-      notification: LightAppPalette.SECONDARY
+      notification: LightAppPalette.SECONDARY,
     },
   },
 };
