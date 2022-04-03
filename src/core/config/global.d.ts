@@ -6,7 +6,7 @@ declare module '@remobile/react-native-clip-rect' {
     style: StyleProp<ViewStyle>;
   }
 
-  const ClipRect: React.FC<ClipRectProps>;
+  const ClipRect: React.VFC<ClipRectProps>;
 
   export = ClipRect;
 }
