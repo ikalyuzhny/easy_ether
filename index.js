@@ -3,9 +3,13 @@
  */
 
 import {AppRegistry} from 'react-native';
-import App from './App';
 import {name as appName} from './app.json';
 
 import '@easyether/core/config/i18n.ts';
+
+import App from '@easyether/App';
+import {initDI} from '@easyether/core/di';
+
+initDI();
 
 AppRegistry.registerComponent(appName, () => App);

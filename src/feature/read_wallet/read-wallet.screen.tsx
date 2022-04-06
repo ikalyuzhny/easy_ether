@@ -4,7 +4,6 @@ import {useIsFocused, useTheme} from '@react-navigation/native';
 import {RNCamera} from 'react-native-camera';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useTranslation} from 'react-i18next';
-import ClipRect from '@remobile/react-native-clip-rect';
 
 export const ReadWalletScreen: React.VFC = () => {
   const isFocused = useIsFocused();
@@ -21,14 +20,16 @@ export const ReadWalletScreen: React.VFC = () => {
         />
       )}
       <View
-        style={[StyleSheet.absoluteFill, {backgroundColor: colors.primary}]}
-      />
-      <ClipRect style={styles.clipBlock} />
-      <SafeAreaView style={styles.infoBlock}>
-        <Text style={[styles.title, {color: colors.text}]}>
-          {t('common.appName')}
-        </Text>
-      </SafeAreaView>
+        style={[
+          StyleSheet.absoluteFill,
+          {backgroundColor: colors.primary, opacity: 0.2},
+        ]}>
+        <SafeAreaView style={styles.infoBlock}>
+          <Text style={[styles.title, {color: colors.text}]}>
+            {t('common.appName')}
+          </Text>
+        </SafeAreaView>
+      </View>
     </View>
   );
 };
@@ -40,6 +41,8 @@ const styles = StyleSheet.create({
   infoBlock: {
     flex: 1,
     marginTop: 100,
+    flexDirection: 'column',
+    alignItems: 'center',
   },
   title: {
     fontSize: 30,

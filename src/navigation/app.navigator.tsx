@@ -8,8 +8,11 @@ const Stack = createNativeStackNavigator();
 
 const AppNavigator: React.VFC = () => {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator initialRouteName={NavigationRoutes.READ_WALLET_SCREEN}>
       <Stack.Screen
+        options={{
+          headerShown: false,
+        }}
         name={NavigationRoutes.READ_WALLET_SCREEN}
         component={ReadWalletScreen}
       />
