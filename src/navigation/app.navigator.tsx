@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {NavigationRoutes} from './navigation.routes';
 import {ReadWalletScreen} from '@easyether/feature/read_wallet/read-wallet.screen';
@@ -7,6 +7,9 @@ import {WalletManagementScreen} from '@easyether/feature/wallet_management/walle
 const Stack = createNativeStackNavigator();
 
 const AppNavigator: React.VFC = () => {
+    useEffect(() => {
+        console.log('NAVIGATOR MOUNTED');
+    }, []);
   return (
     <Stack.Navigator initialRouteName={NavigationRoutes.READ_WALLET_SCREEN}>
       <Stack.Screen

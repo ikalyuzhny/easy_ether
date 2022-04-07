@@ -1,23 +1,63 @@
-import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import React, {useCallback} from 'react';
+import {ActivityIndicator, StyleSheet, Text, View} from 'react-native';
 import {useIsFocused, useTheme} from '@react-navigation/native';
-import {RNCamera} from 'react-native-camera';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useTranslation} from 'react-i18next';
+import {
+  Camera,
+  useCameraDevices,
+  useFrameProcessor,
+} from 'react-native-vision-camera';
+import {Barcode, BarcodeFormat, scanBarcodes} from 'vision-camera-code-scanner';
+import 'react-native-reanimated';
+import {runOnJS} from 'react-native-reanimated';
+import {useDispatch} from 'react-redux';
 
-export const ReadWalletScreen: React.VFC = () => {
+import walletSlice from '@easyether/core/redux/wallet/wallet.slice';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {NavigationRoutes} from '@easyether/navigation/navigation.routes';
+
+export const ReadWalletScreen: React.VFC<NativeStackScreenProps<{}>> = ({
+  navigation,
+}) => {
+  const devices = useCameraDevices();
   const isFocused = useIsFocused();
   const {t} = useTranslation();
   const {colors} = useTheme();
+  const dispatch = useDispatch();
+
+  const onQRCodeDetected = useCallback(
+    (qrCode: Barcode) => {
+      dispatch(walletSlice.actions.getAccount(qrCode.content.data as string));
+      navigation.navigate({
+        key: NavigationRoutes.WALLET_MANAGEMENT_SCREEN,
+      });
+    },
+    [dispatch, navigation],
+  );
+
+  const frameProcessor = useFrameProcessor(
+    frame => {
+      'worklet';
+      const qrCodes = scanBarcodes(frame, [BarcodeFormat.QR_CODE]);
+      if (qrCodes.length > 0) {
+        runOnJS(onQRCodeDetected)(qrCodes[0]);
+      }
+    },
+    [onQRCodeDetected],
+  );
 
   return (
     <View style={styles.container}>
-      {isFocused && (
-        <RNCamera
+      {devices.back ? (
+        <Camera
+          device={devices.back}
           style={StyleSheet.absoluteFill}
-          captureAudio={false}
-          onBarCodeRead={() => {}}
+          isActive={isFocused}
+          frameProcessor={frameProcessor}
         />
+      ) : (
+        <ActivityIndicator />
       )}
       <View
         style={[
