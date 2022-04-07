@@ -1,3 +1,9 @@
+export interface EtherscanGetTransactionsResponse {
+  status: string;
+  message: string;
+  result: EtherscanTransactionModel[];
+}
+
 export interface EtherscanTransactionModel {
   blockNumber: string;
   timeStamp: string;

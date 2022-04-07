@@ -6,10 +6,18 @@ import {useTheme} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
 import walletSlice from '@easyether/core/redux/wallet/wallet.slice';
 import walletAsyncActions from '@easyether/core/redux/wallet/wallet.actions';
-import {RootState} from '@easyether/core/redux/store';
+import {
+  getBalance,
+  getBalanceGettingError,
+  getTransactionGettingError,
+  getTransactions,
+} from '@easyether/core/redux/wallet/wallet.selectors';
 
 export const WalletManagementScreen: React.VFC = () => {
-  const wallet = useSelector((state: RootState) => state.wallet);
+  const transactions = useSelector(getTransactions);
+  const transactionsError = useSelector(getTransactionGettingError);
+  const balance = useSelector(getBalance);
+  const balanceError = useSelector(getBalanceGettingError);
 
   const {t} = useTranslation();
   const {colors} = useTheme();
@@ -20,6 +28,8 @@ export const WalletManagementScreen: React.VFC = () => {
     dispatch(walletAsyncActions.getTransactionsThunk(10));
   }, [dispatch]);
 
+  console.log('ERROR: ', transactionsError);
+
   return (
     <View style={[styles.container, {backgroundColor: colors.background}]}>
       <SafeAreaView style={styles.safeArea}>
@@ -28,18 +38,24 @@ export const WalletManagementScreen: React.VFC = () => {
         </Text>
         <View style={styles.balanceRow}>
           <Text>
-            {t('wallet.balance')}: {wallet.balance}
+            {balanceError
+              ? t('wallet.balanceGettingError')
+              : t('wallet.balance') + balance}
           </Text>
         </View>
         <View>
-          {wallet.transactions.map(transaction => (
-            <View key={transaction.hash}>
-              <Text>{transaction.hash}</Text>
-              <Text>{transaction.from}</Text>
-              <Text>{transaction.to}</Text>
-              <Text>{transaction.value}</Text>
-            </View>
-          ))}
+          {!transactionsError ? (
+            transactions.map(transaction => (
+              <View key={transaction.hash}>
+                <Text>{transaction.hash}</Text>
+                <Text>{transaction.from}</Text>
+                <Text>{transaction.to}</Text>
+                <Text>{transaction.value}</Text>
+              </View>
+            ))
+          ) : (
+            <Text>{t('wallet.transactionsError')}</Text>
+          )}
         </View>
       </SafeAreaView>
     </View>

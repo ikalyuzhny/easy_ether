@@ -8,10 +8,10 @@ const getTransactionsThunk = createAsyncThunk(
   'wallet/getTransaction',
   async (limit: number = 10, thunkAPI) => {
     const {
-      wallet: {account},
+      wallet: {accountKey},
     } = thunkAPI.getState() as RootState;
 
-    if (!account) {
+    if (!accountKey) {
       return thunkAPI.rejectWithValue(t('wallet.error.noAccount'));
     }
 
@@ -19,11 +19,13 @@ const getTransactionsThunk = createAsyncThunk(
       DI_TOKENS.EthereumRepository,
     );
 
+    const account = ethereumRepository.getCredentialsByPrivateKey(accountKey);
+
     try {
       return ethereumRepository.getLastTransactions(account.address, limit);
     } catch (e) {
       return thunkAPI.rejectWithValue(
-        (e as Error)?.toString() ?? t('wallet.error.transactionsException'),
+        e instanceof Error ? e.message : t('wallet.error.unknown'),
       );
     }
   },

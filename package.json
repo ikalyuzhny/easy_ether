@@ -48,6 +48,7 @@
     "react-native-udp": "^2.7.0",
     "react-native-vision-camera": "^2.13.1",
     "react-redux": "^7.2.8",
+    "readable-stream": "^1.0.33",
     "reflect-metadata": "^0.1.13",
     "stream-browserify": "^1.0.0",
     "timers-browserify": "^1.4.2",

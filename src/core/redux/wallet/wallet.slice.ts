@@ -1,4 +1,3 @@
-import {Account} from 'web3-core';
 import {EtherscanTransactionModel} from '@easyether/core/models/etherscan-transaction.model';
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import di, {DI_TOKENS} from '@easyether/core/di';
@@ -8,7 +7,7 @@ import {t} from 'i18next';
 import walletAsyncActions from '@easyether/core/redux/wallet/wallet.actions';
 
 export interface IWalletSlice {
-  account?: Account;
+  accountKey?: string;
 
   isTransactionsLoading: boolean;
   transactions: EtherscanTransactionModel[];
@@ -28,34 +27,37 @@ const walletSlice = createSlice({
   initialState,
   reducers: {
     getAccount: (state, action: PayloadAction<string>) => {
+      if (bip39.validateMnemonic(action.payload)) {
+        state.accountKey = bip39.mnemonicToSeedHex(action.payload);
+      } else {
+        state.accountKey = action.payload;
+      }
+    },
+    getBalance: state => {
+      if (!state.accountKey) {
+        return;
+      }
+
       const ethereumRepository = di.get<IEthereumRepository>(
         DI_TOKENS.EthereumRepository,
       );
 
-      if (bip39.validateMnemonic(action.payload)) {
-        state.account = ethereumRepository.getCredentialsBySeedPhrase(
-          action.payload,
-        );
-      } else {
-        state.account = ethereumRepository.getCredentialsByPrivateKey(
-          action.payload,
-        );
-      }
-    },
-    getBalance: state => {
-      const account = state.account;
+      const account = ethereumRepository.getCredentialsByPrivateKey(
+        state.accountKey,
+      );
 
       if (!account) {
         state.balanceError = t('wallet.error.noAccount');
       }
 
-      const ethereumRepository = di.get<IEthereumRepository>(
-        DI_TOKENS.EthereumRepository,
-      );
-
-      ethereumRepository.getBalance(account!.address).then(balance => {
-        state.balance = balance;
-      });
+      ethereumRepository
+        .getBalance(account!.address)
+        .then(balance => {
+          state.balance = balance;
+        })
+        .catch(e => {
+          state.balanceError = (e as Error).message;
+        });
     },
   },
   extraReducers: builder => {

@@ -1,5 +1,5 @@
-import React, {useCallback} from 'react';
-import {ActivityIndicator, StyleSheet, Text, View} from 'react-native';
+import React, {useCallback, useEffect, useState} from 'react';
+import {ActivityIndicator, Alert, StyleSheet, Text, View} from 'react-native';
 import {useIsFocused, useTheme} from '@react-navigation/native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useTranslation} from 'react-i18next';
@@ -9,31 +9,72 @@ import {
   useFrameProcessor,
 } from 'react-native-vision-camera';
 import {Barcode, BarcodeFormat, scanBarcodes} from 'vision-camera-code-scanner';
-import 'react-native-reanimated';
 import {runOnJS} from 'react-native-reanimated';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 
 import walletSlice from '@easyether/core/redux/wallet/wallet.slice';
-import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {NavigationRoutes} from '@easyether/navigation/navigation.routes';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {AppStackParamList} from '@easyether/navigation/app.navigator';
+import {getAccountKey} from '@easyether/core/redux/wallet/wallet.selectors';
+import di, {DI_TOKENS} from '@easyether/core/di';
+import {IEthereumRepository} from '@easyether/core/repositories/types';
 
-export const ReadWalletScreen: React.VFC<NativeStackScreenProps<{}>> = ({
-  navigation,
-}) => {
+export const ReadWalletScreen: React.VFC<
+  NativeStackScreenProps<AppStackParamList>
+> = ({navigation}) => {
   const devices = useCameraDevices();
   const isFocused = useIsFocused();
   const {t} = useTranslation();
   const {colors} = useTheme();
   const dispatch = useDispatch();
+  const accountKey = useSelector(getAccountKey);
+
+  const [isCodeScanning, setIsCodeScanning] = useState<boolean>(false);
+
+  const onErrorDismissed = useCallback(() => {
+    setIsCodeScanning(false);
+  }, []);
+
+  useEffect(() => {
+    if (!accountKey) {
+      return;
+    }
+
+    const ethereumRepository = di.get<IEthereumRepository>(
+      DI_TOKENS.EthereumRepository,
+    );
+
+    try {
+      ethereumRepository.getCredentialsByPrivateKey(accountKey);
+      navigation.navigate(NavigationRoutes.WALLET_MANAGEMENT_SCREEN);
+    } catch (e) {
+      Alert.alert(
+        e instanceof Error ? e.message : t('error'),
+        undefined,
+        [
+          {
+            text: 'OK',
+            onPress: onErrorDismissed,
+          },
+        ],
+        {
+          onDismiss: onErrorDismissed,
+        },
+      );
+    }
+  }, [accountKey, navigation, onErrorDismissed, t]);
 
   const onQRCodeDetected = useCallback(
     (qrCode: Barcode) => {
+      if (isCodeScanning) {
+        return;
+      }
+
+      setIsCodeScanning(true);
       dispatch(walletSlice.actions.getAccount(qrCode.content.data as string));
-      navigation.navigate({
-        key: NavigationRoutes.WALLET_MANAGEMENT_SCREEN,
-      });
     },
-    [dispatch, navigation],
+    [dispatch, isCodeScanning],
   );
 
   const frameProcessor = useFrameProcessor(
@@ -53,7 +94,7 @@ export const ReadWalletScreen: React.VFC<NativeStackScreenProps<{}>> = ({
         <Camera
           device={devices.back}
           style={StyleSheet.absoluteFill}
-          isActive={isFocused}
+          isActive={isFocused && !isCodeScanning}
           frameProcessor={frameProcessor}
         />
       ) : (

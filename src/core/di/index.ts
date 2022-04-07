@@ -1,7 +1,7 @@
 import {Container} from 'inversify';
 import axios, {AxiosInstance} from 'axios';
 import Config from 'react-native-config';
-import {Eth} from 'web3-eth';
+import Web3 from 'web3';
 import {IEthereumRepository} from '@easyether/core/repositories/types';
 import EthereumRepository from '@easyether/core/repositories/ethereum.repository';
 
@@ -13,7 +13,7 @@ export const DI_TOKENS = {
 
 const di = new Container();
 
-export function initDI() {
+export async function initDI() {
   //External
   di.bind<AxiosInstance>(DI_TOKENS.EtherscanAxios).toConstantValue(
     axios.create({
@@ -24,8 +24,8 @@ export function initDI() {
       },
     }),
   );
-  di.bind<Eth>(DI_TOKENS.Web3Eth).toConstantValue(
-    new Eth(Config.ETHEREUM_PROVIDER),
+  di.bind<Web3>(DI_TOKENS.Web3Eth).toConstantValue(
+    await new Web3(new Web3.providers.HttpProvider(Config.ETHERSCAN_URL)),
   );
 
   //Repository
