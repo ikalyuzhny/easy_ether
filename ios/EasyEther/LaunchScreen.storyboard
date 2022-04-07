@@ -17,10 +17,16 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="eth-logo" translatesAutoresizingMaskIntoConstraints="NO" id="S0x-yf-yDn">
-                                <rect key="frame" x="123" y="269" width="128" height="128"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <constraints>
+                                    <constraint firstAttribute="width" relation="lessThanOrEqual" id="1Va-Qw-Xsa"/>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="128" id="7Pi-ok-Udz"/>
                                     <constraint firstAttribute="height" constant="1277" id="EwI-3n-st3"/>
+                                    <constraint firstAttribute="height" relation="lessThanOrEqual" constant="1" id="GiB-ic-I1u"/>
+                                    <constraint firstAttribute="height" relation="lessThanOrEqual" id="Nru-Xo-cj6"/>
+                                    <constraint firstAttribute="width" relation="lessThanOrEqual" constant="1" id="UqH-aH-enn"/>
                                     <constraint firstAttribute="width" constant="784" id="X6x-ZJ-n5h"/>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="128" id="Zak-rc-mZM"/>
                                 </constraints>
                             </imageView>
                         </subviews>

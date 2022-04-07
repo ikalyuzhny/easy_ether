@@ -4,9 +4,21 @@
   },
   "wallet": {
     "noAccountError": "No account found. Please create an account first.",
+    "accountTitle": "Account: ",
     "balanceGettingError": "Error getting balance",
-    "balance" : "Balance: {{balance}} ETH",
+    "balance" : {
+      "title" : "Balance:",
+      "value": "{{balance}} ETH"
+    },
     "transactionsError": "Error getting transactions",
-    "unknownError": "Unknown error"
+    "unknownError": "Unknown error",
+    "transaction": {
+      "title": "Transactions: ",
+      "index": "Transaction #{{index}}",
+      "hash": "Hash:",
+      "from": "From:",
+      "to": "To:",
+      "value": "Value:"
+    }
   }
 }

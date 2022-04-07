@@ -33,6 +33,7 @@ export async function initDI() {
     new EthereumRepository(
       di.get(DI_TOKENS.Web3Eth),
       di.get(DI_TOKENS.EtherscanAxios),
+      2000,
     ),
   );
 }

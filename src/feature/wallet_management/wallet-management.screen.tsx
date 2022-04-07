@@ -1,68 +1,99 @@
-import React, {useEffect} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import React, {useCallback, useEffect, useState} from 'react';
+import {RefreshControl, ScrollView, StyleSheet, Text, View} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useTranslation} from 'react-i18next';
 import {useTheme} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
 import walletAsyncActions from '@easyether/core/redux/wallet/wallet.actions';
 import {
+  getAccount,
   getBalance,
   getBalanceGettingError,
+  getBalanceLoading,
   getTransactionGettingError,
   getTransactions,
+  getTransactionsLoading,
 } from '@easyether/core/redux/wallet/wallet.selectors';
+import {TitleLogo} from '@easyether/feature/wallet_management/components/title-logo.component';
+import {InfoRow} from '@easyether/feature/wallet_management/components/info-row.component';
+import {TransactionsView} from '@easyether/feature/wallet_management/components/transactions-view.component';
 
 export const WalletManagementScreen: React.VFC = () => {
+  const account = useSelector(getAccount);
+
   const transactions = useSelector(getTransactions);
+  const isTransactionsLoading = useSelector(getTransactionsLoading);
   const transactionsError = useSelector(getTransactionGettingError);
+
   const balance = useSelector(getBalance);
+  const isBalanceLoading = useSelector(getBalanceLoading);
   const balanceError = useSelector(getBalanceGettingError);
 
   const {t} = useTranslation();
   const {colors} = useTheme();
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(walletAsyncActions.getBalanceThunk());
-    dispatch(walletAsyncActions.getTransactionsThunk(10));
+  const [isRefreshingManually, setIsRefreshingManually] = useState(false);
+
+  const onScreenInit = useCallback(() => {
+    setIsRefreshingManually(true);
+
+    Promise.all([
+      dispatch(walletAsyncActions.getBalanceThunk()),
+      dispatch(walletAsyncActions.getTransactionsThunk(10)),
+    ]).then(() => {
+      setIsRefreshingManually(false);
+    });
   }, [dispatch]);
 
   useEffect(() => {
-    console.log('transactions', transactions);
-    console.log('transactionsError', transactionsError);
-    console.log('balance', balance);
-    console.log('balanceError', balanceError);
-  }, [transactions, transactionsError, balance, balanceError]);
+    onScreenInit();
+  }, [onScreenInit]);
 
   return (
     <View style={[styles.container, {backgroundColor: colors.background}]}>
       <SafeAreaView style={styles.safeArea}>
-        <Text style={[styles.title, {color: colors.text}]}>
-          {t('common.appName')}
-        </Text>
-        <View style={styles.balanceRow}>
-          <Text>
-            {balanceError
-              ? t('wallet.balanceGettingError')
-              : t('wallet.balance', {
-                  balance,
-                })}
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.scrollView}
+          refreshControl={
+            <RefreshControl
+              refreshing={
+                isRefreshingManually &&
+                isBalanceLoading &&
+                isTransactionsLoading
+              }
+              onRefresh={onScreenInit}
+            />
+          }>
+          <TitleLogo title={t('common.appName')} />
+          <InfoRow
+            style={styles.firstRow}
+            copyToClipboard
+            title={
+              !account ? t('wallet.noAccountError') : t('wallet.accountTitle')
+            }
+            value={account ? account.address : undefined}
+          />
+          <InfoRow
+            style={styles.infoRow}
+            loading={isBalanceLoading}
+            title={
+              balanceError
+                ? t('wallet.balanceGettingError')
+                : t('wallet.balance.title')
+            }
+            value={balance ? t('wallet.balance.value', {balance}) : undefined}
+          />
+          <Text style={[styles.transactionsTitle, {color: colors.text}]}>
+            {t('wallet.transaction.title')}
           </Text>
-        </View>
-        <View>
-          {!transactionsError ? (
-            transactions.map(transaction => (
-              <View key={transaction.hash}>
-                <Text>{transaction.hash}</Text>
-                <Text>{transaction.from}</Text>
-                <Text>{transaction.to}</Text>
-                <Text>{transaction.value}</Text>
-              </View>
-            ))
-          ) : (
-            <Text>{t('wallet.transactionsError')}</Text>
-          )}
-        </View>
+          <TransactionsView
+            transactions={transactions}
+            transactionsLoading={isTransactionsLoading}
+            transactionsError={transactionsError}
+          />
+        </ScrollView>
       </SafeAreaView>
     </View>
   );
@@ -74,8 +105,13 @@ const styles = StyleSheet.create({
   },
   safeArea: {
     flex: 1,
+  },
+  scrollView: {
     flexDirection: 'column',
     alignItems: 'center',
+    paddingTop: 24,
+    paddingBottom: 48,
+    paddingHorizontal: 24,
   },
   title: {
     fontSize: 24,
@@ -83,14 +119,17 @@ const styles = StyleSheet.create({
     marginTop: 16,
     marginBottom: 16,
   },
-  balanceRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    width: '100%',
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderBottomColor: '#ccc',
-    borderBottomWidth: 1,
+  infoRow: {
+    marginTop: 16,
+  },
+  firstRow: {
+    marginTop: 36,
+  },
+  transactionsTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginTop: 50,
+    marginBottom: 10,
+    alignSelf: 'flex-start',
   },
 });

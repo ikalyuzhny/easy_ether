@@ -3,6 +3,10 @@ import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import bip39 from 'react-native-bip39';
 import walletAsyncActions from '@easyether/core/redux/wallet/wallet.actions';
 
+/**
+ * I decided to create only one slice just to save time
+ * In the other case - it's better to split the slice onto three parts
+ */
 export interface IWalletSlice {
   accountKey?: string;
 
@@ -41,12 +45,14 @@ const walletSlice = createSlice({
       walletAsyncActions.getTransactionsThunk.fulfilled,
       (state, action) => {
         state.transactions = action.payload;
+        state.isTransactionsLoading = false;
       },
     );
     builder.addCase(
       walletAsyncActions.getTransactionsThunk.rejected,
       (state, action) => {
         state.transactionsError = action.payload as string;
+        state.isTransactionsLoading = false;
       },
     );
 
@@ -58,12 +64,14 @@ const walletSlice = createSlice({
       walletAsyncActions.getBalanceThunk.fulfilled,
       (state, action) => {
         state.balance = action.payload;
+        state.isBalanceLoading = false;
       },
     );
     builder.addCase(
       walletAsyncActions.getBalanceThunk.rejected,
       (state, action) => {
         state.balanceError = action.payload as string;
+        state.isBalanceLoading = false;
       },
     );
   },
