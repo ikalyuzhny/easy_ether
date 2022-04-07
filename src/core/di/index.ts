@@ -25,7 +25,7 @@ export async function initDI() {
     }),
   );
   di.bind<Web3>(DI_TOKENS.Web3Eth).toConstantValue(
-    await new Web3(new Web3.providers.HttpProvider(Config.ETHERSCAN_URL)),
+    await new Web3(new Web3.providers.HttpProvider(Config.ETHEREUM_PROVIDER)),
   );
 
   //Repository

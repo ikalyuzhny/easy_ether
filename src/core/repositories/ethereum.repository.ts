@@ -3,16 +3,15 @@ import {Account, TransactionConfig} from 'web3-core';
 import Web3 from 'web3';
 import {AxiosInstance} from 'axios';
 import bip39 from 'react-native-bip39';
-import {
-  EtherscanGetTransactionsResponse,
-  EtherscanTransactionModel,
-} from '@easyether/core/models/etherscan-transaction.model';
+import {EtherscanGetTransactionsResponse} from '@easyether/core/models/etherscan-transaction.model';
 
 class EthereumRepository implements IEthereumRepository {
   constructor(private web3: Web3, private etherScanAxios: AxiosInstance) {}
 
-  getBalance(address: string): Promise<string> {
-    return this.web3.eth.getBalance(address);
+  async getBalance(address: string): Promise<string> {
+    const response = await this.web3.eth.getBalance(address);
+
+    return this.web3.utils.fromWei(response, 'ether');
   }
 
   getCredentialsByPrivateKey(privateKey: string): Account {
@@ -30,7 +29,7 @@ class EthereumRepository implements IEthereumRepository {
   async getLastTransactions(
     address: string,
     limit: number,
-  ): Promise<EtherscanTransactionModel[]> {
+  ): Promise<EtherscanGetTransactionsResponse> {
     const {data} =
       await this.etherScanAxios.get<EtherscanGetTransactionsResponse>('api', {
         params: {
@@ -45,11 +44,7 @@ class EthereumRepository implements IEthereumRepository {
         },
       });
 
-    if (data.status === '0') {
-      throw new Error('No transactions found');
-    }
-
-    return data.result;
+    return data;
   }
 
   async sendTransaction(

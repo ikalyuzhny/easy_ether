@@ -4,7 +4,6 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import {useTranslation} from 'react-i18next';
 import {useTheme} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
-import walletSlice from '@easyether/core/redux/wallet/wallet.slice';
 import walletAsyncActions from '@easyether/core/redux/wallet/wallet.actions';
 import {
   getBalance,
@@ -24,11 +23,16 @@ export const WalletManagementScreen: React.VFC = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(walletSlice.actions.getBalance());
+    dispatch(walletAsyncActions.getBalanceThunk());
     dispatch(walletAsyncActions.getTransactionsThunk(10));
   }, [dispatch]);
 
-  console.log('ERROR: ', transactionsError);
+  useEffect(() => {
+    console.log('transactions', transactions);
+    console.log('transactionsError', transactionsError);
+    console.log('balance', balance);
+    console.log('balanceError', balanceError);
+  }, [transactions, transactionsError, balance, balanceError]);
 
   return (
     <View style={[styles.container, {backgroundColor: colors.background}]}>
@@ -40,7 +44,9 @@ export const WalletManagementScreen: React.VFC = () => {
           <Text>
             {balanceError
               ? t('wallet.balanceGettingError')
-              : t('wallet.balance') + balance}
+              : t('wallet.balance', {
+                  balance,
+                })}
           </Text>
         </View>
         <View>

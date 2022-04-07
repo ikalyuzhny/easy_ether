@@ -1,5 +1,12 @@
 {
   "common": {
     "appName": "EasyEther"
+  },
+  "wallet": {
+    "noAccountError": "No account found. Please create an account first.",
+    "balanceGettingError": "Error getting balance",
+    "balance" : "Balance: {{balance}} ETH",
+    "transactionsError": "Error getting transactions",
+    "unknownError": "Unknown error"
   }
 }

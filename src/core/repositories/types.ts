@@ -1,5 +1,5 @@
 import {Account, TransactionConfig} from 'web3-core';
-import {EtherscanTransactionModel} from '@easyether/core/models/etherscan-transaction.model';
+import {EtherscanGetTransactionsResponse} from '@easyether/core/models/etherscan-transaction.model';
 
 export interface IEthereumRepository {
   getCredentialsByPrivateKey(privateKey: string): Account;
@@ -9,7 +9,7 @@ export interface IEthereumRepository {
   getLastTransactions(
     address: string,
     limit: number,
-  ): Promise<EtherscanTransactionModel[]>;
+  ): Promise<EtherscanGetTransactionsResponse>;
 
   sendTransaction(
     account: Account,

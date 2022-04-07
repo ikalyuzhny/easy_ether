@@ -13,11 +13,12 @@ const Stack = createNativeStackNavigator<AppStackParamList>();
 
 const AppNavigator: React.VFC = () => {
   return (
-    <Stack.Navigator initialRouteName={NavigationRoutes.READ_WALLET_SCREEN}>
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}
+      initialRouteName={NavigationRoutes.READ_WALLET_SCREEN}>
       <Stack.Screen
-        options={{
-          headerShown: false,
-        }}
         name={NavigationRoutes.READ_WALLET_SCREEN}
         component={ReadWalletScreen}
       />

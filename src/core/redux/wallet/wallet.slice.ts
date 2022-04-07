@@ -1,9 +1,6 @@
 import {EtherscanTransactionModel} from '@easyether/core/models/etherscan-transaction.model';
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-import di, {DI_TOKENS} from '@easyether/core/di';
-import {IEthereumRepository} from '@easyether/core/repositories/types';
 import bip39 from 'react-native-bip39';
-import {t} from 'i18next';
 import walletAsyncActions from '@easyether/core/redux/wallet/wallet.actions';
 
 export interface IWalletSlice {
@@ -13,6 +10,7 @@ export interface IWalletSlice {
   transactions: EtherscanTransactionModel[];
   transactionsError?: string;
 
+  isBalanceLoading: boolean;
   balance?: string;
   balanceError?: string;
 }
@@ -20,44 +18,19 @@ export interface IWalletSlice {
 const initialState: IWalletSlice = {
   isTransactionsLoading: true,
   transactions: [],
+  isBalanceLoading: true,
 };
 
 const walletSlice = createSlice({
   name: 'wallet-slice',
   initialState,
   reducers: {
-    getAccount: (state, action: PayloadAction<string>) => {
+    setAccountKey: (state, action: PayloadAction<string>) => {
       if (bip39.validateMnemonic(action.payload)) {
         state.accountKey = bip39.mnemonicToSeedHex(action.payload);
       } else {
         state.accountKey = action.payload;
       }
-    },
-    getBalance: state => {
-      if (!state.accountKey) {
-        return;
-      }
-
-      const ethereumRepository = di.get<IEthereumRepository>(
-        DI_TOKENS.EthereumRepository,
-      );
-
-      const account = ethereumRepository.getCredentialsByPrivateKey(
-        state.accountKey,
-      );
-
-      if (!account) {
-        state.balanceError = t('wallet.error.noAccount');
-      }
-
-      ethereumRepository
-        .getBalance(account!.address)
-        .then(balance => {
-          state.balance = balance;
-        })
-        .catch(e => {
-          state.balanceError = (e as Error).message;
-        });
     },
   },
   extraReducers: builder => {
@@ -74,6 +47,23 @@ const walletSlice = createSlice({
       walletAsyncActions.getTransactionsThunk.rejected,
       (state, action) => {
         state.transactionsError = action.payload as string;
+      },
+    );
+
+    builder.addCase(walletAsyncActions.getBalanceThunk.pending, state => {
+      state.balanceError = undefined;
+      state.isBalanceLoading = true;
+    });
+    builder.addCase(
+      walletAsyncActions.getBalanceThunk.fulfilled,
+      (state, action) => {
+        state.balance = action.payload;
+      },
+    );
+    builder.addCase(
+      walletAsyncActions.getBalanceThunk.rejected,
+      (state, action) => {
+        state.balanceError = action.payload as string;
       },
     );
   },

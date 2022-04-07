@@ -32,7 +32,7 @@ export const ReadWalletScreen: React.VFC<
 
   const [isCodeScanning, setIsCodeScanning] = useState<boolean>(false);
 
-  const onErrorDismissed = useCallback(() => {
+  const onScanFinished = useCallback(() => {
     setIsCodeScanning(false);
   }, []);
 
@@ -48,22 +48,23 @@ export const ReadWalletScreen: React.VFC<
     try {
       ethereumRepository.getCredentialsByPrivateKey(accountKey);
       navigation.navigate(NavigationRoutes.WALLET_MANAGEMENT_SCREEN);
+      onScanFinished();
     } catch (e) {
       Alert.alert(
-        e instanceof Error ? e.message : t('error'),
+        t('wallet.noAccountError'),
         undefined,
         [
           {
             text: 'OK',
-            onPress: onErrorDismissed,
+            onPress: onScanFinished,
           },
         ],
         {
-          onDismiss: onErrorDismissed,
+          onDismiss: onScanFinished,
         },
       );
     }
-  }, [accountKey, navigation, onErrorDismissed, t]);
+  }, [accountKey, navigation, onScanFinished, t]);
 
   const onQRCodeDetected = useCallback(
     (qrCode: Barcode) => {
@@ -72,7 +73,9 @@ export const ReadWalletScreen: React.VFC<
       }
 
       setIsCodeScanning(true);
-      dispatch(walletSlice.actions.getAccount(qrCode.content.data as string));
+      dispatch(
+        walletSlice.actions.setAccountKey(qrCode.content.data as string),
+      );
     },
     [dispatch, isCodeScanning],
   );

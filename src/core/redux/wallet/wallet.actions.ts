@@ -12,7 +12,7 @@ const getTransactionsThunk = createAsyncThunk(
     } = thunkAPI.getState() as RootState;
 
     if (!accountKey) {
-      return thunkAPI.rejectWithValue(t('wallet.error.noAccount'));
+      return thunkAPI.rejectWithValue(t('wallet.noAccountError'));
     }
 
     const ethereumRepository = di.get<IEthereumRepository>(
@@ -22,17 +22,50 @@ const getTransactionsThunk = createAsyncThunk(
     const account = ethereumRepository.getCredentialsByPrivateKey(accountKey);
 
     try {
-      return ethereumRepository.getLastTransactions(account.address, limit);
-    } catch (e) {
-      return thunkAPI.rejectWithValue(
-        e instanceof Error ? e.message : t('wallet.error.unknown'),
+      const response = await ethereumRepository.getLastTransactions(
+        account.address,
+        limit,
       );
+
+      if (response.status === '1') {
+        return response.result;
+      }
+
+      throw new Error(response.message);
+    } catch (e) {
+      return thunkAPI.rejectWithValue(t('wallet.unknownError'));
+    }
+  },
+);
+
+const getBalanceThunk = createAsyncThunk(
+  'wallet/getBalance',
+  async (_, thunkAPI) => {
+    const {
+      wallet: {accountKey},
+    } = thunkAPI.getState() as RootState;
+
+    if (!accountKey) {
+      return thunkAPI.rejectWithValue(t('wallet.noAccountError'));
+    }
+
+    const ethereumRepository = di.get<IEthereumRepository>(
+      DI_TOKENS.EthereumRepository,
+    );
+
+    const account = ethereumRepository.getCredentialsByPrivateKey(accountKey);
+
+    try {
+      return await ethereumRepository.getBalance(account.address);
+    } catch (e) {
+      return thunkAPI.rejectWithValue(t('wallet.unknownError'));
     }
   },
 );
 
 const walletAsyncActions = {
   getTransactionsThunk,
+  getBalanceThunk,
 };
 
 export default walletAsyncActions;
