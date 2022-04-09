@@ -17,12 +17,15 @@ export interface IWalletSlice {
   isBalanceLoading: boolean;
   balance?: string;
   balanceError?: string;
+
+  isTransactionSending: boolean;
 }
 
 const initialState: IWalletSlice = {
   isTransactionsLoading: true,
   transactions: [],
   isBalanceLoading: true,
+  isTransactionSending: false,
 };
 
 const walletSlice = createSlice({
@@ -74,6 +77,27 @@ const walletSlice = createSlice({
         state.isBalanceLoading = false;
       },
     );
+
+    builder.addCase(walletAsyncActions.sendTransactionThunk.pending, state => {
+      state.isTransactionSending = true;
+    });
+    builder.addCase(
+      walletAsyncActions.sendTransactionThunk.fulfilled,
+      (state, action) => {
+        state.isTransactionSending = false;
+
+        if (state.transactions.length === 10) {
+          state.transactions.pop();
+        }
+        state.transactions = [
+          action.payload as EtherscanTransactionModel,
+          ...state.transactions,
+        ];
+      },
+    );
+    builder.addCase(walletAsyncActions.sendTransactionThunk.rejected, state => {
+      state.isTransactionSending = false;
+    });
   },
 });
 

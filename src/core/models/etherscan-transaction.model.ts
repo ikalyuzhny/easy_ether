@@ -4,6 +4,12 @@ export interface EtherscanGetTransactionsResponse {
   result: EtherscanTransactionModel[];
 }
 
+export enum TransactionStatus {
+  ERROR = 0,
+  SUCCESSFUL = 1,
+  PENDING = 2,
+}
+
 export interface EtherscanTransactionModel {
   blockNumber: string;
   timeStamp: string;
@@ -23,4 +29,5 @@ export interface EtherscanTransactionModel {
   cumulativeGasUsed: string;
   gasUsed: string;
   confirmations: string;
+  status?: TransactionStatus;
 }

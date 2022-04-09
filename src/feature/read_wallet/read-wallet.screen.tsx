@@ -23,7 +23,7 @@ import {IEthereumRepository} from '@easyether/core/repositories/types';
 export const ReadWalletScreen: React.VFC<
   NativeStackScreenProps<AppStackParamList>
 > = ({navigation}) => {
-  const devices = useCameraDevices();
+  const devices = useCameraDevices('wide-angle-camera');
   const isFocused = useIsFocused();
   const {t} = useTranslation();
   const {colors} = useTheme();

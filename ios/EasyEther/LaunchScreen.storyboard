@@ -16,25 +16,19 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="eth-logo" translatesAutoresizingMaskIntoConstraints="NO" id="S0x-yf-yDn">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="eth-logo" translatesAutoresizingMaskIntoConstraints="NO" id="S0x-yf-yDn">
+                                <rect key="frame" x="123.5" y="269.5" width="128" height="128"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" relation="lessThanOrEqual" id="1Va-Qw-Xsa"/>
-                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="128" id="7Pi-ok-Udz"/>
-                                    <constraint firstAttribute="height" constant="1277" id="EwI-3n-st3"/>
-                                    <constraint firstAttribute="height" relation="lessThanOrEqual" constant="1" id="GiB-ic-I1u"/>
-                                    <constraint firstAttribute="height" relation="lessThanOrEqual" id="Nru-Xo-cj6"/>
-                                    <constraint firstAttribute="width" relation="lessThanOrEqual" constant="1" id="UqH-aH-enn"/>
-                                    <constraint firstAttribute="width" constant="784" id="X6x-ZJ-n5h"/>
-                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="128" id="Zak-rc-mZM"/>
+                                    <constraint firstAttribute="height" constant="128" id="GTU-69-VIb"/>
+                                    <constraint firstAttribute="width" constant="128" id="VcI-5n-fEH"/>
                                 </constraints>
                             </imageView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Bcu-3y-fUS"/>
                         <color key="backgroundColor" red="0.74901962280000001" green="0.80000001190000003" blue="0.58039218189999997" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                         <constraints>
-                            <constraint firstItem="S0x-yf-yDn" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="Vqc-oO-Sc7"/>
-                            <constraint firstItem="S0x-yf-yDn" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="wrd-jy-1TE"/>
+                            <constraint firstItem="S0x-yf-yDn" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="jls-75-rSm"/>
+                            <constraint firstItem="S0x-yf-yDn" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="zdI-lB-apX"/>
                         </constraints>
                     </view>
                 </viewController>

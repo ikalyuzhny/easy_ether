@@ -1,6 +1,13 @@
 import React, {useCallback} from 'react';
 import {EtherscanTransactionModel} from '@easyether/core/models/etherscan-transaction.model';
-import {ActivityIndicator, StyleSheet, Text, View} from 'react-native';
+import {
+  ActivityIndicator,
+  FlatList,
+  ListRenderItem,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import {useTheme} from '@react-navigation/native';
 import {TransactionItem} from '@easyether/feature/wallet_management/components/transaction-item.component';
 
@@ -20,6 +27,17 @@ export const TransactionsView: React.VFC<ITransactionsViewProps> = ({
   const keyExtractor = useCallback(
     (item: EtherscanTransactionModel) => item.hash,
     [],
+  );
+
+  const renderItem = useCallback<ListRenderItem<EtherscanTransactionModel>>(
+    ({index, item}) => (
+      <TransactionItem
+        transaction={item}
+        index={index}
+        isLast={index === transactions.length - 1}
+      />
+    ),
+    [transactions.length],
   );
 
   if (transactionsLoading) {
@@ -48,16 +66,11 @@ export const TransactionsView: React.VFC<ITransactionsViewProps> = ({
    * and because the component is inside a scrollview
    */
   return (
-    <View style={styles.container}>
-      {transactions.map((transaction, index) => (
-        <TransactionItem
-          transaction={transaction}
-          index={index}
-          key={keyExtractor(transaction)}
-          isLast={index === transactions.length - 1}
-        />
-      ))}
-    </View>
+    <FlatList
+      data={transactions}
+      renderItem={renderItem}
+      keyExtractor={keyExtractor}
+    />
   );
 };
 

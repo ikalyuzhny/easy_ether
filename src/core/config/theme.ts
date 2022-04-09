@@ -12,6 +12,8 @@ export enum LightAppPalette {
   TEXT = '#0D1821',
   BORDER = '#BDCA91',
   SECONDARY = '#344966',
+  ERROR = '#ff3535',
+  PENDING = '#ffcc94',
 }
 
 export enum DarkAppPalette {
@@ -21,6 +23,8 @@ export enum DarkAppPalette {
   TEXT = '#F0F4EF',
   BORDER = '#BDCA91',
   SECONDARY = '#344966',
+  ERROR = '#ff3535',
+  PENDING = '#ffcc94',
 }
 
 const AppTheme: IAppTheme = {

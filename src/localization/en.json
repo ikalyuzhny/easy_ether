@@ -1,6 +1,9 @@
 {
   "common": {
-    "appName": "EasyEther"
+    "appName": "EasyEther",
+    "required": "Required",
+    "invalidAmount": "Invalid amount",
+    "invalidAddress": "Invalid address"
   },
   "wallet": {
     "noAccountError": "No account found. Please create an account first.",
@@ -19,6 +22,12 @@
       "from": "From:",
       "to": "To:",
       "value": "Value:"
+    },
+    "sendTransaction": {
+      "title": "Send transaction",
+      "to": "To",
+      "amount": "Amount",
+      "send": "Send"
     }
   }
 }

@@ -14,5 +14,5 @@ export interface IEthereumRepository {
   sendTransaction(
     account: Account,
     transaction: TransactionConfig,
-  ): Promise<void>;
+  ): Promise<string>;
 }

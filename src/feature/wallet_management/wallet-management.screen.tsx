@@ -10,6 +10,7 @@ import {
   getBalance,
   getBalanceGettingError,
   getBalanceLoading,
+  getIsTranslationSending,
   getTransactionGettingError,
   getTransactions,
   getTransactionsLoading,
@@ -17,6 +18,10 @@ import {
 import {TitleLogo} from '@easyether/feature/wallet_management/components/title-logo.component';
 import {InfoRow} from '@easyether/feature/wallet_management/components/info-row.component';
 import {TransactionsView} from '@easyether/feature/wallet_management/components/transactions-view.component';
+import {
+  ISendTransactionForm,
+  SendTransactionView,
+} from '@easyether/feature/wallet_management/components/send-transaction-form/send-transaction-view.component';
 
 export const WalletManagementScreen: React.VFC = () => {
   const account = useSelector(getAccount);
@@ -28,6 +33,8 @@ export const WalletManagementScreen: React.VFC = () => {
   const balance = useSelector(getBalance);
   const isBalanceLoading = useSelector(getBalanceLoading);
   const balanceError = useSelector(getBalanceGettingError);
+
+  const isTransactionSending = useSelector(getIsTranslationSending);
 
   const {t} = useTranslation();
   const {colors} = useTheme();
@@ -50,6 +57,13 @@ export const WalletManagementScreen: React.VFC = () => {
     onScreenInit();
   }, [onScreenInit]);
 
+  const onTransactionSend = useCallback(
+    (values: ISendTransactionForm) => {
+      dispatch(walletAsyncActions.sendTransactionThunk(values));
+    },
+    [dispatch],
+  );
+
   return (
     <View style={[styles.container, {backgroundColor: colors.background}]}>
       <SafeAreaView style={styles.safeArea}>
@@ -60,8 +74,7 @@ export const WalletManagementScreen: React.VFC = () => {
             <RefreshControl
               refreshing={
                 isRefreshingManually &&
-                isBalanceLoading &&
-                isTransactionsLoading
+                (isBalanceLoading || isTransactionsLoading)
               }
               onRefresh={onScreenInit}
             />
@@ -84,6 +97,14 @@ export const WalletManagementScreen: React.VFC = () => {
                 : t('wallet.balance.title')
             }
             value={balance ? t('wallet.balance.value', {balance}) : undefined}
+          />
+          <Text style={[styles.transactionsTitle, {color: colors.text}]}>
+            {t('wallet.sendTransaction.title')}
+          </Text>
+          <SendTransactionView
+            onTransactionSend={onTransactionSend}
+            balance={balance}
+            isLoading={!account || isBalanceLoading || isTransactionSending}
           />
           <Text style={[styles.transactionsTitle, {color: colors.text}]}>
             {t('wallet.transaction.title')}

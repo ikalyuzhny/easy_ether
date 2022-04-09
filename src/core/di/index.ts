@@ -19,9 +19,6 @@ export async function initDI() {
     axios.create({
       baseURL: Config.ETHERSCAN_URL,
       timeout: 5000,
-      headers: {
-        'Content-Type': 'application/json',
-      },
     }),
   );
   di.bind<Web3>(DI_TOKENS.Web3Eth).toConstantValue(
@@ -33,7 +30,6 @@ export async function initDI() {
     new EthereumRepository(
       di.get(DI_TOKENS.Web3Eth),
       di.get(DI_TOKENS.EtherscanAxios),
-      2000,
     ),
   );
 }

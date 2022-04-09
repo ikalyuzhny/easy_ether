@@ -27,3 +27,6 @@ export const getBalanceGettingError = (state: RootState) =>
   state.wallet.balanceError;
 export const getBalanceLoading = (state: RootState) =>
   state.wallet.isBalanceLoading;
+
+export const getIsTranslationSending = (state: RootState) =>
+  state.wallet.isTransactionSending;
