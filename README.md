@@ -1,8 +1,8 @@
-#EesyEther - ethereum test appliaction
+# EesyEther - ethereum test appliaction
 >The app wasn't tested on Android because of time reasons
 ---
 
-###Setup
+### Setup
 Steps to set up the project
 
 1. Clone this repo
@@ -15,14 +15,14 @@ Steps to set up the project
    5. Delete `GCDAsyncSocket.m` item for each target
 4. Repeat the 3 step each time you install or re-install pods
 
-#####You are good to go! Just run `yarn start` and run the iOS build via XCode
+##### You are good to go! Just run `yarn start` and run the iOS build via XCode
 
 ---
 
 ### Testing
 To test the app use these two QR-codes with seed phrases:
 
-####Main account:
+#### Main account:
 ![](./docs/main-account.png)
 >Seed phrase: `length galaxy song demand rival innocent release reform space humble canvas parrot`
 
@@ -31,7 +31,7 @@ To test the app use these two QR-codes with seed phrases:
 >Address: `0x68f359cfa669b103ecbc48aae4a6cdcccf63e8d1`
 
 
-####Second account:
+#### Second account:
 ![](./docs/second-account.png)
 >Seed phrase: `favorite solution act face crisp warfare diet pause essence hybrid wonder teach`
 
@@ -41,7 +41,7 @@ To test the app use these two QR-codes with seed phrases:
 
 ---
 
-###Future improvements
+### Future improvements
 
 1. Provide better UI and UX (that's for sure)
 2. Add some production/staging configs
@@ -54,7 +54,7 @@ To test the app use these two QR-codes with seed phrases:
 
 ---
 
-###Thoughts about taken decisions
+### Thoughts about taken decisions
 1. I wasn't aware about blockchain, ethereum and other stuff. It was definitely hard to investigate all this things
 2. It was easy to use etherscan, and I don't know what I would do if there was no such service. I don't have enough knowledge to iterate between blocks :)
 3. I would like to add some animations in the read wallet screen (the screen with the camera view)
