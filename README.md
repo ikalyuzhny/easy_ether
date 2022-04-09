@@ -48,8 +48,9 @@ To test the app use these two QR-codes with seed phrases:
 3. Investigate how to fix Xcode build issue or how to automate the fix (use something like `post-pod-install`)
 4. Try to implement subscription on the last 10 transactions (actually I tried but I got that it will take too much time)
 5. Implement Back-End for transactions management
-6. Cover all code with unit tests
+6. Cover all code with unit tests (especially for the async actions)
 7. Not all errors are handled correctly, we can do it much better.
+8. Add popup for clipboard copy (the functionality is already implemented in the app, see src/feature/wallet_management/components/info-row.component.tsx)
 
 ---
 
